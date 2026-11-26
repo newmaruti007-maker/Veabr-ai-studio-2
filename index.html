@@ -1,1 +1,190 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1020">
+<title>VABRA AI STUDIO.0</title>
+<style>
+:root{--bg:#0b1020;--panel:#151f33;--panel2:#10192b;--line:#334155;--text:#f1f5f9;--muted:#a7b4ca;--blue:#0891b2;--blue2:#0284c7;--green:#16a34a}
+*{box-sizing:border-box}
+body{margin:0;padding:16px;background:radial-gradient(circle at top,#172554 0,#0b1020 42%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:900px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 22px}
+.badge,.pill{border:1px solid var(--line);background:#17243a;color:#67e8f9;padding:7px 12px;border-radius:999px;font-size:13px}
+select,input,textarea,button{font:inherit}
+select,input[type=text],input[type=password],input[type=url],textarea{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px;width:100%}
+select{width:auto;max-width:100%}
+h1{font-size:clamp(27px,6vw,38px);margin:0 0 8px}
+h2{font-size:21px;margin:24px 0 12px}
+.intro{color:var(--muted);line-height:1.55;margin:0 0 18px}
+.panel{background:rgba(21,31,51,.96);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0;box-shadow:0 12px 32px #0002}
+.modes,.row,.actions,.plans{display:flex;gap:9px;flex-wrap:wrap}
+.mode,.btn{border:1px solid var(--line);background:#0e1728;color:var(--text);border-radius:10px;padding:10px 13px;cursor:pointer}
+.mode.active,.btn.primary{background:var(--blue2);border-color:var(--blue2);color:white}
+.btn.green{background:var(--green);border-color:var(--green)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.field{margin:13px 0}
+label{display:block;color:#dbeafe;font-size:14px;margin-bottom:7px}
+textarea{min-height:115px;resize:vertical;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px}
+.card b{display:block;margin-bottom:5px}
+.small{font-size:13px;color:var(--muted);line-height:1.5}
+#preview{display:none;max-width:100%;max-height:260px;border-radius:12px;margin-top:10px;border:1px solid var(--line)}
+#output{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px;min-height:75px;line-height:1.55}
+#videoResult{display:none;width:100%;border-radius:12px;margin-top:12px;background:#000}
+.status{min-height:22px;color:#67e8f9;font-size:13px;margin:10px 0}
+.notice{background:#332b16;border:1px solid #80651f;color:#fde68a;padding:12px;border-radius:10px;font-size:13px;line-height:1.5}
+.hidden{display:none!important}
+footer{text-align:center;color:#718096;font-size:13px;padding:25px 0}
+@media(max-width:520px){body{padding:12px}.panel{padding:13px}.mode,.btn{flex:1 1 auto}.row>*{flex:1 1 130px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <span class="badge" id="badge">તમારી કલ્પના, AI સાથે</span>
+ <select id="language" aria-label="ભાષા"><option value="gu">ગુજરાતી</option><option value="hi">हिन्दी</option><option value="en">English</option></select>
+</header>
+<h1>VABRA AI STUDIO.O<span class="pill">2.0</span></h1>
+<p class="intro" id="intro">AI ફોટો, વીડિયો, વાર્તા અને ક્રિએટિવ કામ માટેનું તમારું સ્ટુડિયો.</p>
 
+<section class="panel">
+ <h2>🎬 Create Studio</h2>
+ <div class="modes" id="modeButtons">
+  <button class="mode active" data-mode="text-video">Text to Video</button>
+  <button class="mode" data-mode="image-video">Image to Video</button>
+  <button class="mode" data-mode="image-image">Image to Image</button>
+  <button class="mode" data-mode="writing-image">Writing to Image</button>
+  <button class="mode" data-mode="story">AI Story</button>
+  <button class="mode" data-mode="script">AI Script</button>
+  <button class="mode" data-mode="voice">AI Voice</button>
+  <button class="mode" data-mode="music">AI Music</button>
+ </div>
+ <div class="field hidden" id="imageField">
+  <label for="imageFile">Reference image પસંદ કરો</label>
+  <input id="imageFile" type="file" accept="image/*">
+  <img id="preview" alt="Image preview">
+ </div>
+ <div class="field">
+  <label for="prompt">તમારો વિષય / સીન / પ્રોમ્પ્ટ</label>
+  <textarea id="prompt" placeholder="ઉદાહરણ: વરસાદી રાતે શહેરની સડક પર ધીમે ચાલતી કાળી કાર, સિનેમેટિક કેમેરા મૂવમેન્ટ..."></textarea>
+ </div>
+ <div class="grid">
+  <div class="field"><label for="duration">વીડિયો સમય</label><select id="duration"><option>5 seconds</option><option selected>10 seconds</option><option>15 seconds</option><option>30 seconds</option></select></div>
+  <div class="field"><label for="ratio">Aspect ratio</label><select id="ratio"><option>16:9</option><option selected>9:16</option><option>1:1</option></select></div>
+  <div class="field"><label for="quality">Quality</label><select id="quality"><option>720p</option><option selected>1080p</option><option>4K (if supported)</option></select></div>
+ </div>
+ <div class="field">
+  <label>Generation mode</label>
+  <div class="plans">
+   <button class="mode active" data-plan="free">🆓 Free</button>
+   <button class="mode" data-plan="premium">💎 Premium</button>
+   <button class="mode" data-plan="custom">🔑 My API</button>
+  </div>
+  <p class="small" id="planInfo">Free mode: prompt અને સ્ક્રિપ્ટ તૈયાર થશે. વાસ્તવિક વીડિયો માટે જોડાયેલ જનરેશન સર્વિસ જરૂરી છે.</p>
+ </div>
+ <div class="actions">
+  <button class="btn primary" id="generate">પ્રોમ્પ્ટ / કન્ટેન્ટ બનાવો</button>
+  <button class="btn" id="copy">Copy</button>
+  <button class="btn" id="download">ટેક્સ્ટ ડાઉનલોડ</button>
+  <button class="btn green hidden" id="realGenerate">AI જનરેશન શરૂ કરો</button>
+ </div>
+ <div class="status" id="status" role="status"></div>
+ <pre id="output">પરિણામ અહીં દેખાશે.</pre>
+ <video id="videoResult" controls playsinline></video>
+</section>
+
+<section class="panel">
+ <h2>🔐 API Settings</h2>
+ <div class="notice">સુરક્ષા: તમારી API key આ પેજમાં અથવા GitHub કોડમાં ન લખશો. API key સુરક્ષિત backend / Netlify Environment Variables માં રાખવી. અહીંનું API endpoint backend સાથે જોડ્યા પછી જ વાસ્તવિક જનરેશન ચાલશે.</div>
+ <div class="field"><label for="endpoint">Backend API endpoint</label><input id="endpoint" type="url" placeholder="/.netlify/functions/generate"></div>
+ <div class="row"><button class="btn" id="saveEndpoint">Endpoint સેવ કરો</button><button class="btn" id="resetEndpoint">Default કરો</button></div>
+ <p class="small">Default endpoint: <code>/.netlify/functions/generate</code>. આ endpoint બનાવ્યા વગર Free mode માં prompt builder જ કામ કરશે.</p>
+</section>
+
+<h2>✨ તમારા AI ટૂલ્સ</h2>
+<div class="grid">
+ <article class="card"><b>📖 AI Story Generator</b><span class="small">વાર્તા, પાત્રો અને કથાવસ્તુ.</span></article>
+ <article class="card"><b>✍️ AI Script Writer</b><span class="small">સીન પ્રમાણે ડાયલોગ અને સમય.</span></article>
+ <article class="card"><b>🎭 Character Planner</b><span class="small">હીરો, હિરોઈન અને પાત્રની વિગતો.</span></article>
+ <article class="card"><b>🎞️ Video Prompt Maker</b><span class="small">કેમેરા, લાઇટિંગ અને મોશન સૂચનાઓ.</span></article>
+</div>
+<footer>© 2026 VABRA AI STUDIO.Built for creators</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+let mode='text-video',plan='free',imageData='';
+const endpointDefault='/.netlify/functions/generate';
+const translations={
+ gu:{badge:'તમારી કલ્પના, AI સાથે',intro:'AI ફોટો, વીડિયો, વાર્તા અને ક્રિએટિવ કામ માટેનું તમારું સ્ટુડિયો.',empty:'પહેલાં વિષય અથવા સીન લખો.',done:'તમારો પ્રોમ્પ્ટ તૈયાર છે.',copy:'પરિણામ કોપી થયું.',planFree:'Free mode: prompt અને સ્ક્રિપ્ટ તૈયાર થશે. વાસ્તવિક વીડિયો માટે જોડાયેલ જનરેશન સર્વિસ જરૂરી છે.'},
+ hi:{badge:'आपकी कल्पना, AI के साथ',intro:'AI फोटो, वीडियो, कहानी और रचनात्मक काम के लिए आपका स्टूडियो।',empty:'पहले विषय या सीन लिखें।',done:'आपका प्रॉम्प्ट तैयार है।',copy:'कॉपी हो गया।',planFree:'Free mode में prompt और script तैयार होंगे। असली वीडियो के लिए generation service जोड़नी होगी।'},
+ en:{badge:'Your imagination, powered by AI',intro:'Your studio for AI photos, videos, stories and creative work.',empty:'Please enter a topic or scene first.',done:'Your prompt is ready.',copy:'Copied.',planFree:'Free mode builds prompts and scripts. Real video generation requires a connected generation service.'}
+};
+function lang(){return $('language').value}
+function setStatus(s){$('status').textContent=s}
+document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));
+ mode=b.dataset.mode;
+ $('imageField').classList.toggle('hidden',!['image-video','image-image'].includes(mode));
+ $('realGenerate').classList.toggle('hidden',plan==='free'||!['text-video','image-video','image-image','writing-image'].includes(mode));
+}));
+document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('[data-plan]').forEach(x=>x.classList.toggle('active',x===b));
+ plan=b.dataset.plan;
+ $('planInfo').textContent=plan==='free'?translations[lang()].planFree:plan==='premium'?'Premium: backend પર સક્રિય provider અને billing સેટ કરેલું હોવું જરૂરી છે.':'My API: પોતાની API key backend environment variables માં સેટ કરો. Key અહીં ન લખશો.';
+ $('realGenerate').classList.toggle('hidden',plan==='free'||!['text-video','image-video','image-image','writing-image'].includes(mode));
+}));
+$('language').addEventListener('change',()=>{
+ const t=translations[lang()];$('badge').textContent=t.badge;$('intro').textContent=t.intro;
+ $('planInfo').textContent=plan==='free'?t.planFree:$('planInfo').textContent;
+});
+$('imageFile').addEventListener('change',e=>{
+ const f=e.target.files?.[0];if(!f){imageData='';$('preview').style.display='none';return}
+ if(!f.type.startsWith('image/')){setStatus('કૃપા કરીને image file પસંદ કરો.');return}
+ const r=new FileReader();r.onload=()=>{imageData=r.result;$('preview').src=imageData;$('preview').style.display='block'};r.readAsDataURL(f);
+});
+function build(){
+ const text=$('prompt').value.trim();if(!text){setStatus(translations[lang()].empty);return}
+ const duration=$('duration').value,ratio=$('ratio').value,quality=$('quality').value;
+ const labels={'text-video':'Text to Video','image-video':'Image to Video','image-image':'Image to Image','writing-image':'Writing to Image',story:'AI Story',script:'AI Script',voice:'AI Voice',music:'AI Music'};
+ let result=`VABRA AI STUDIO-2.0\nMode: ${labels[mode]}\nDuration: ${duration}\nAspect ratio: ${ratio}\nQuality: ${quality}\n\n`;
+ if(mode==='story') result+=`શીર્ષક: ${text}\nશરૂઆત: ${text} સાથે વાર્તાની શરૂઆત થાય છે.\nમધ્ય: મુખ્ય પાત્ર સામે એક મુશ્કેલી અને અણધાર્યો વળાંક આવે છે.\nઅંત: પાત્ર નિર્ણય લઈને વાર્તાનો યાદગાર અંત લાવે છે.`;
+ else if(mode==='script') result+=`15-SECOND SCRIPT\n0-5 sec: Establishing shot. ${text}\n5-10 sec: Character/action close-up with smooth camera movement.\n10-15 sec: Final reveal, emotional beat and fade out.\n\nDialogue / Voiceover: ${text}`;
+ else if(mode==='voice') result+=`Voiceover text: ${text}\nSuggested voice: natural, clear Gujarati narration; balanced pace; expressive delivery.`;
+ else if(mode==='music') result+=`Music brief: ${text}\nSuggested arrangement: cinematic intro, gradual build, emotional peak, clean ending.`;
+ else result+=`Ready AI prompt:\nCreate a cinematic ${labels[mode]} scene: ${text}. Natural realistic details, consistent subject appearance, smooth camera movement, professional lighting, clear composition, coherent motion, high visual quality. ${mode==='image-video'?'Animate the uploaded reference image while preserving the subject identity, face, clothing and background unless explicitly requested.':''}\n\nNegative prompt: blurry, distorted face, extra fingers, flicker, warped objects, inconsistent clothing, text artifacts.`;
+ $('output').textContent=result;setStatus(translations[lang()].done);
+}
+$('generate').addEventListener('click',build);
+$('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('output').textContent);setStatus(translations[lang()].copy)}catch(e){setStatus('Copy ન થયું. ટેક્સ્ટ પસંદ કરીને copy કરો.')}});
+$('download').addEventListener('click',()=>{
+ const blob=new Blob([$('output').textContent],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);a.download='vabra-ai-output.txt';a.click();URL.revokeObjectURL(a.href);
+});
+$('saveEndpoint').addEventListener('click',()=>{const v=$('endpoint').value.trim()||endpointDefault;localStorage.setItem('vabraEndpoint',v);$('endpoint').value=v;setStatus('Backend endpoint સેવ થયો.')});
+$('resetEndpoint').addEventListener('click',()=>{$('endpoint').value=endpointDefault;localStorage.removeItem('vabraEndpoint');setStatus('Default endpoint સેટ થયો.')});
+$('endpoint').value=localStorage.getItem('vabraEndpoint')||endpointDefault;
+$('realGenerate').addEventListener('click',async()=>{
+ const prompt=$('prompt').value.trim();if(!prompt){setStatus(translations[lang()].empty);return}
+ const endpoint=$('endpoint').value.trim()||endpointDefault;
+ setStatus('Backend સાથે જોડાઈ રહ્યા છીએ...');
+ $('realGenerate').disabled=true;
+ try{
+  const payload={mode,plan,prompt,duration:$('duration').value,aspectRatio:$('ratio').value,quality:$('quality').value,image:imageData||null};
+  const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  if(!res.ok)throw new Error(`Server error ${res.status}`);
+  const data=await res.json();
+  if(data.videoUrl){$('videoResult').src=data.videoUrl;$('videoResult').style.display='block';setStatus('વીડિયો તૈયાર છે.')}
+  else if(data.status==='processing'){setStatus(data.message||'જનરેશન ચાલુ છે. Backend status/polling જોડવાની જરૂર પડી શકે છે.')}
+  else {setStatus(data.message||'Backend તરફથી જવાબ મળ્યો, પણ videoUrl મળ્યો નથી.')}
+ }catch(err){setStatus('વાસ્તવિક જનરેશન શરૂ ન થયું: '+err.message+'. Netlify backend function અને provider API સેટ કરો.')}
+  finally{$('realGenerate').disabled=false}});
+  
+  
+
+  
+ </script>
+ </body>
+ </html>
