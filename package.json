@@ -1,5 +1,5 @@
 {
-  "name": "vabra-ai-studio",
+  "name": "vabra-ai-studio-2",
   "private": true,
   "scripts": {
     "deploy": "wrangler deploy"
