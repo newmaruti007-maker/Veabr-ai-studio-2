@@ -1,4 +1,6 @@
-name = "vabar-ai-studio-2"
+name = "vabra-ai-studio-1"
 main = "worker.js"
 compatibility_date = "2026-11-26"
 
+[assets]
+directory = "./"
