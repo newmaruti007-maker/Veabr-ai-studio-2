@@ -1,19 +1,48 @@
-<!DOCTYPE html>
-<html lang="gu">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#07152f"><title>VABRA AI STUDIO 2.0</title>
-<style>
-:root{--bg:#07132b;--panel:#101f3a;--line:#2b4162;--text:#f4f7ff;--muted:#a9bbd5;--cyan:#55d6e8}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0,#182c58 0,transparent 42%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans Gujarati",sans-serif;padding:16px}.wrap{max-width:900px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:5px 0 24px}.brand{font-weight:850;font-size:20px;letter-spacing:.4px}.brand span{color:var(--cyan)}.tag{font-size:12px;color:var(--cyan);border:1px solid #356179;border-radius:99px;padding:7px 12px}.hero{margin:10px 0 22px}.hero h1{font-size:clamp(28px,6vw,42px);margin:8px 0}.hero p{color:var(--muted);margin:0}.panel{background:linear-gradient(160deg,#132541,#0d1a32);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 12px 35px #0002}h2{font-size:21px;margin:0 0 14px}.modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.mode{background:#0b1930;border:1px solid var(--line);color:var(--text);padding:12px 8px;border-radius:13px;font-size:14px;cursor:pointer;min-height:48px}.mode.active{background:linear-gradient(130deg,#087bb7,#2464c6);border-color:#39b6e5}label{display:block;color:#d4e1f2;margin:14px 0 7px;font-size:14px}input,select,textarea{width:100%;background:#09162c;border:1px solid #334966;border-radius:12px;color:white;padding:12px;font:inherit;outline:none}textarea{min-height:125px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--cyan)}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{border:0;border-radius:12px;padding:14px 16px;color:white;background:linear-gradient(120deg,#0787c9,#3569dd);font-weight:700;font-size:16px;cursor:pointer;width:100%;margin-top:14px}.btn:disabled{opacity:.55;cursor:wait}.btn.secondary{background:#203653;border:1px solid #39516f}.status{color:var(--muted);margin:12px 0 0;white-space:pre-wrap}.output{white-space:pre-wrap;line-height:1.6;min-height:90px;background:#09162c;border:1px solid #304763;border-radius:12px;padding:14px;overflow-wrap:anywhere}.small{font-size:12px;color:var(--muted);line-height:1.5}.file{padding:10px;border:1px dashed #49617d;border-radius:12px}.hidden{display:none}.foot{text-align:center;color:#7e93b2;font-size:12px;padding:12px}@media(min-width:620px){.modes{grid-template-columns:repeat(4,minmax(0,1fr))}.panel{padding:22px}}
-</style></head><body><div class="wrap"><header class="top"><div class="brand">✦ VABRA <span>AI STUDIO</span></div><div class="tag">VERSION 2.0</div></header><section class="hero"><h1>તમારી કલ્પના, AI સાથે ✨</h1><p>તમારા વિચારોને સર્જનાત્મક લખાણ, સ્ટોરી અને AI પ્રોમ્પ્ટમાં ફેરવો.</p></section>
-<section class="panel"><h2>🎬 Create Studio</h2><div class="modes" id="modes"><button class="mode active" data-mode="text-video">Text to Video</button><button class="mode" data-mode="image-video">Image to Video</button><button class="mode" data-mode="image-image">Image to Image</button><button class="mode" data-mode="text-image">Writing to Image</button><button class="mode" data-mode="story">AI Story</button><button class="mode" data-mode="script">AI Script</button><button class="mode" data-mode="voice">AI Voice Script</button><button class="mode" data-mode="music">AI Music Prompt</button></div>
-<label for="prompt">તમારો વિષય / સીન / પ્રોમ્પ્ટ</label><textarea id="prompt" placeholder="ઉદાહરણ: વરસાદી રાતે શહેરની રસ્તા પર ધીમે ચાલતી કાર, સિનેમેટિક લાઇટિંગ..."></textarea><div id="uploadBox" class="hidden"><label>Reference image (વૈકલ્પિક)</label><input class="file" id="image" type="file" accept="image/*"><div id="preview"></div></div>
-<div class="row"><div><label>Output language</label><select id="language"><option>ગુજરાતી</option><option>Hindi</option><option>English</option></select></div><div><label>Length</label><select id="length"><option>Short</option><option selected>10 seconds</option><option>20 seconds</option><option>30 seconds</option><option>1 minute</option><option>Long</option></select></div></div><div class="row"><div><label>Aspect ratio</label><select id="ratio"><option>9:16 (Reels/Shorts)</option><option>16:9 (YouTube)</option><option>1:1 (Square)</option><option>4:5</option></select></div><div><label>Style</label><select id="style"><option>Cinematic</option><option>Realistic</option><option>Anime</option><option>3D animation</option><option>Cartoon</option><option>Documentary</option><option>Creative</option></select></div></div><button id="generate" class="btn">✨ Generate with AI</button><p id="status" class="status">Gemini API key નાખો. આ prototype key browserમાં જ વાપરે છે; public સાઇટ પર key મૂકવી સુરક્ષિત નથી.</p></section>
-<section class="panel"><h2>🔐 AI Connection</h2><label for="apiKey">Gemini API Key</label><input id="apiKey" type="password" autocomplete="off" placeholder="AIza..."><p class="small">Key save થતી નથી. Public website માટે સુરક્ષિત રીત Cloudflare Worker secret અને backend proxy છે.</p></section><section class="panel"><h2>📄 AI Result</h2><div id="output" class="output">Prompt લખો અને Generate દબાવો. પરિણામ અહીં દેખાશે.</div><button id="copy" class="btn secondary">Copy Result</button></section><div class="foot">VABRA AI STUDIO 2.0 · Creative workspace</div></div>
-<script>
-const modeNames={'text-video':'Text to Video માટે production-ready prompt બનાવો: subject, scene, camera movement, lighting, motion, visual details.','image-video':'Reference image પરથી animation prompt બનાવો. Imageનો subject અને composition જાળવો.','image-image':'Reference image માટે image-edit અથવા transformation prompt બનાવો.','text-image':'Text પરથી વિગતવાર image-generation prompt બનાવો.','story':'આ વિષય પર રસપ્રદ વાર્તા લખો.','script':'આ વિષય માટે video/reel script, scenes અને dialogue લખો.','voice':'Voice-over માટે બોલવા યોગ્ય script અને delivery સૂચનો બનાવો.','music':'AI music-generation prompt બનાવો; mood, instruments, tempo અને structure લખો.'};let selected='text-video';const $=id=>document.getElementById(id);
-document.querySelectorAll('.mode').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.mode').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selected=btn.dataset.mode;$('uploadBox').classList.toggle('hidden',!['image-video','image-image'].includes(selected));$('prompt').placeholder=modeNames[selected]}));
-$('image').addEventListener('change',()=>{const f=$('image').files[0];$('preview').innerHTML='';if(f){const im=document.createElement('img');im.src=URL.createObjectURL(f);im.style.cssText='max-width:100%;max-height:220px;border-radius:12px;margin-top:10px';$('preview').appendChild(im)}});
-function imagePart(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve({inline_data:{mime_type:file.type,data:r.result.split(',')[1]}});r.onerror=reject;r.readAsDataURL(file)})}
-$('generate').addEventListener('click',async()=>{const key=$('apiKey').value.trim(),prompt=$('prompt').value.trim();if(!prompt){$('status').textContent='પહેલા વિષય અથવા prompt લખો.';return}if(!key){$('status').textContent='Gemini API key નાખો.';return}const btn=$('generate');btn.disabled=true;btn.textContent='⏳ AI કામ કરી રહ્યું છે...';$('status').textContent='Request મોકલાઈ રહી છે...';const lang=$('language').value,len=$('length').value,ratio=$('ratio').value,style=$('style').value;const instruction=`You are a creative assistant for VABRA AI STUDIO. Respond in ${lang}. Mode: ${selected}. User prompt: ${prompt}. Length: ${len}. Aspect ratio: ${ratio}. Style: ${style}. Task: ${modeNames[selected]} For video prompts include subject, scene, motion, camera, lighting, mood, negative prompt. For story/script use clear structure. For voice/music provide text prompts only; do not claim audio was generated. Return useful headings.`;try{const parts=[{text:instruction}],file=$('image').files[0];if(file&&['image-video','image-image'].includes(selected))parts.push(await imagePart(file));const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts}],generationConfig:{temperature:.8,maxOutputTokens:2048}})});const data=await res.json();if(!res.ok)throw new Error(data.error?.message||'API error '+res.status);const answer=(data.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('').trim();if(!answer)throw new Error('AI તરફથી ખાલી જવાબ મળ્યો.');$('output').textContent=answer;$('status').textContent='AI result તૈયાર છે. આ text/prompt છે—અહીં સીધું video, image, voice કે music ફાઇલ generate થતી નથી.'}catch(e){$('status').textContent='❌ '+e.message;$('output').textContent='Error: '+e.message+'\nAPI key, quota અને internet ચકાસો. આ prototype key સીધી browserથી મોકલે છે.'}finally{btn.disabled=false;btn.textContent='✨ Generate with AI'}});
-$('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('output').textContent);$('status').textContent='Result copy થયું!'}catch{$('status').='Copy ન થયું—resultને long-press કરીને copy કરો.'}});
-</script></body></html>
+async function handleGenerate() {
+  const promptInput = document.querySelector("textarea");
+  const resultBox = document.querySelector("#result, .ai-result, [data-result]");
+  const langSelect = document.querySelector("select");
+
+  const basePrompt = promptInput ? promptInput.value.trim() : "";
+  if (!basePrompt) {
+    if (resultBox) {
+      resultBox.textContent = "કૃપા કરીને પહેલા વિષય અથવા પ્રોમ્પ્ટ લખો.";
+    }
+    return;
+  }
+
+  const language = langSelect ? langSelect.value : "ગુજરાતી";
+  const finalPrompt = `${basePrompt}\n\nOutput language: ${language}`;
+
+  if (resultBox) {
+    resultBox.textContent = "જવાબ તૈયાર થઈ રહ્યો છે...";
+  }
+
+  try {
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt: finalPrompt,
+        model: "gemini-2.5-flash"
+      })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "API માંથી ભૂલ આવી છે.");
+    }
+
+    const replyText =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "કોઈ જવાબ મળ્યો નથી.";
+
+    if (resultBox) {
+      resultBox.textContent = replyText;
+    }
+  } catch (err) {
+    if (resultBox) {
+      resultBox.textContent = "ભૂલ: " + (err.message || "કનેક્શન સમસ્યા");
+    }
+  }
+}
