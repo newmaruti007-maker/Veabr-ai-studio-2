@@ -4,7 +4,7 @@ export default {
 
     if (url.pathname === "/api/generate" && request.method === "POST") {
       return new Response(
-        JSON.stringify({ error: "API temporarily bandh chhe." }),
+        JSON.stringify({ error: "API live bandh chhe." }),
         { status: 503, headers: { "Content-Type": "application/json" } }
       );
     }
