@@ -1,4 +1,5 @@
-main = "worker.js"
-[assets]
-directory = "./"
-binding = "ASSETS"
+export default {
+  async fetch(request, env) {
+    return env.ASSETS.fetch(request);
+  }
+};
